@@ -1,13 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #gameboard {
   display: grid;
   grid-template-columns: repeat(3, max-content);
   justify-items: center;
   align-content: center;
-  gap: 1rem;
-  background-color: rgb(246, 180, 93);
-
-  margin: 0 auto;
-  width: min-content;
+  gap: 0.4rem;
+  background-color: #4f4f4f;
 }
 
 .cell {
@@ -16,9 +19,21 @@
   align-items: center;
   font-size: 150px;
 
-  width: 200px;
-  height: 200px;
-  background-color: rgb(255, 255, 255);
+  width: 100px;
+  height: 100px;
+  background-color: #ffffff;
 
   cursor: pointer;
+}
+
+#container {
+  margin: 0 auto;
+  width: min-content;
+
+  margin-top: 3rem;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 4rem;
 }

@@ -1,8 +1,8 @@
 "use strict";
 
-const Gameboard = (function() {
 
-  const gameArray = new Array(9).fill(null);
+const Gameboard = (function() {
+  const board = new Array(9).fill(null);
   const winningSeqs = [
                         [0, 3, 6],
                         [1, 4, 7],
@@ -15,86 +15,90 @@ const Gameboard = (function() {
                         [0, 4, 8],
                         [2, 4, 6]
                       ];
-  
-  function checkWin(player) {
-    for (const seq of winningSeqs) {
-      if (seq.every(val => player.playedCells.sort().includes(val))) {
-          console.log(`${player.name} won`)
 
-          return
+  function resetGame() {
+    board = new Array(9).fill(null);
+    // players.forEach(player => player.playedCells = [])
+  }
+
+  function isGameOver(player) {
+    for (const seq of winningSeqs) {
+      if (seq.every(val => board[val] === player)) {
+          console.log(`${player.name} won`);
+
+          return true
       } 
     }
 
-    if (gameArray.every(val => val != null)) {
-      console.log("it's a tie")
+    if (board.every(val => val != null)) {
+      console.log("it's a tie");
 
-      return
+      return true
     }
   }
 
-  function mark (player, cell) {
-    if (gameArray[cell]) {
+  function markCell(player, cell) {
+    if (board[cell]) {
       console.log("cell is occupied")
       return
     }
 
-    gameArray[cell] = [player, player.icon];
-    player.playedCells.push(cell);
-
-    checkWin(player);
+    board[cell] = player;
+    // player.playedCells.push(cell);
   }
 
+  return {board, markCell, winningSeqs, resetGame, isGameOver};
+})();
 
-  // function addCellsEvent(player) {
-  //   // const cells = document.querySelectorAll(".cell");
-  //   const gameboard = document.getElementById("gameboard");
-  //   gameboard.addEventListener("click", (e) => {
-  //     const clickedCell = e.target.closest(".cell");
-  //     if (!clickedCell) return;
 
-  //     clickedCell.children[0].textContent = player.icon;
-  //   })
+const Game = (function() {
+  const player1 = Player("Xavier", "✖");
+  const player2 = Player("Oman", "🞅");
 
-  //   // cells.forEach(cell => {
-  //   //   cell.addEventListener("click", (e) => {
-  //   //     cell.children[0].textContent = player.icon;
-  //   //   })
-  //   // })
-  // }
+  const players = [player1, player2];
+  // const board = Gameboard();
 
-  return {mark};
+  let activePlayer = players[0];
 
-})()
+  function togglePlayer() {
+    activePlayer = players.reverse()[0];
+    // console.log(activePlayer)
+  }
+
+  function playRound(cell) {
+    if (isNaN(cell)) return;
+
+    Gameboard.markCell(activePlayer, cell);
+    if (Gameboard.isGameOver(activePlayer)) {
+      Gameboard.resetGame()
+    };
+    
+    togglePlayer();
+    // console.log(Gameboard.board)
+  }
+
+  return {playRound};
+  
+})();
+
 
 function Player(name, icon) {
-  const playedCells = [];
-
-  // const gameboard = document.getElementById("gameboard");
-  // gameboard.addEventListener("click", (e) => {
-  //   const clickedCell = e.target.closest(".cell");
-  //   if (!clickedCell) return;
-
-  //   clickedCell.children[0].textContent = this.icon;
-  // })
+  // const playedCells = [];
 
   return {
           name, 
           icon, 
-          playedCells,
-          play(cell) {
-            Gameboard.mark(this, cell);
-          }
+          // playedCells,
         }
 }
 
-const player1 = Player("Xavier", "✖");
-const player2 = Player("Oman", "🞅");
 
-// player1.play(3);
-// player2.play(7);
-// player1.play(4);
-// player2.play(5);
-// player1.play(6);
-// player2.play(9);
-// player1.play(2);
+// function DisplayControl() {
+//   const gameboard = document.getElementById("gameboard");
+//   gameboard.addEventListener("click", (e) => {
+//   const clickedCell = e.target.closest(".cell");
+//   if (!clickedCell) return;
 
+//   clickedCell.children[0].textContent = this.icon;
+//   })
+// }
