@@ -26,28 +26,28 @@ const Gameboard = (function() {
       if (seq.every(val => board[val] === player)) {
           console.log(`${player.name} won`);
 
-          return true
+          return true;
       } 
     }
 
     if (board.every(val => val != null)) {
       console.log("it's a tie");
 
-      return true
+      return true;
     }
   }
 
   function markCell(player, cell) {
     if (board[cell]) {
-      console.log("cell is occupied")
-      return
+      console.log("cell is occupied");
+      return;
     }
 
     board[cell] = player;
     // player.playedCells.push(cell);
   }
 
-  return {board, markCell, winningSeqs, resetGame, isGameOver};
+  return {board, markCell, resetGame, isGameOver};
 })();
 
 
@@ -56,8 +56,6 @@ const Game = (function() {
   const player2 = Player("Oman", "🞅");
 
   const players = [player1, player2];
-  // const board = Gameboard();
-
   let activePlayer = players[0];
 
   function togglePlayer() {
@@ -70,7 +68,7 @@ const Game = (function() {
 
     Gameboard.markCell(activePlayer, cell);
     if (Gameboard.isGameOver(activePlayer)) {
-      Gameboard.resetGame()
+      Gameboard.resetGame();
     };
     
     togglePlayer();
