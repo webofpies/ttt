@@ -79,7 +79,7 @@ const Game = (function() {
     if (!Gameboard.markCell(activePlayer, cell)) return null;
 
     if (Gameboard.hasPlayerWon(activePlayer)) gameStatus = "win";
-    if (Gameboard.isGameTie()) gameStatus = "tie";
+    else if (Gameboard.isGameTie()) gameStatus = "tie";
 
     if (gameStatus) Gameboard.resetGame();
     else togglePlayer();
