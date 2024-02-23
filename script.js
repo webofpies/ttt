@@ -17,11 +17,11 @@ const Gameboard = (function() {
                         [2, 4, 6]
                       ];
 
+  const getWinningSeq = () => winningSeq;
+
   function resetGame() {
     board = new Array(9).fill(null);
   }
-
-  const getWinningSeq = () => winningSeq;
 
   function hasPlayerWon(player) {
     for (const seq of winningSeqs) {
@@ -30,11 +30,9 @@ const Gameboard = (function() {
         console.log(`${player.name} won`);
 
         return true;
+      }
     }
   }
-  }
-
-  const getBoard = () => board;
 
   function isGameTie() {
     if (board.every(val => val != null)) {
@@ -55,7 +53,7 @@ const Gameboard = (function() {
     return true;
   }
 
-  return {markCell, resetGame, hasPlayerWon, isGameTie, getBoard, getWinningSeq};
+  return {markCell, resetGame, hasPlayerWon, isGameTie, getWinningSeq};
 })();
 
 
@@ -73,18 +71,18 @@ const Game = (function() {
   const getActivePlayer = () => activePlayer;
 
   function playRound(cell) {
-    let gameStatus = "";
+    let roundStatus = "";
 
     if (isNaN(cell)) return null;
     if (!Gameboard.markCell(activePlayer, cell)) return null;
 
-    if (Gameboard.hasPlayerWon(activePlayer)) gameStatus = "win";
-    else if (Gameboard.isGameTie()) gameStatus = "tie";
+    if (Gameboard.hasPlayerWon(activePlayer)) roundStatus = "win";
+    else if (Gameboard.isGameTie()) roundStatus = "tie";
 
-    if (gameStatus) Gameboard.resetGame();
+    if (roundStatus) Gameboard.resetGame();
     else togglePlayer();
 
-    return gameStatus;
+    return roundStatus;
   }
 
   return {playRound, getActivePlayer, player1, player2};
@@ -105,12 +103,11 @@ function DisplayControl() {
   const alertBtn = document.getElementById("reset");
   const alertSpan = document.querySelector("#alert span");
   const cellSpans = document.querySelectorAll(".cell span");
-  // console.log(cellSpans)
 
-  Game.player1.name = "Xavier";
+  Game.player1.name = "Player_X";
   Game.player1.icon = "✖";
   Game.player1.color = "#fe6666";
-  Game.player2.name = "Oman";
+  Game.player2.name = "Player_O";
   Game.player2.icon = "🞅";
   Game.player2.color = "#62b5fe";
 
@@ -121,40 +118,37 @@ function DisplayControl() {
     let activePlayer = Game.getActivePlayer();
     
     const cellNum = Array.from(cells).indexOf(clickedCell);
-    const gameStatus = Game.playRound(cellNum);
+    const roundStatus = Game.playRound(cellNum);
 
-    if (gameStatus !== null) {
+    if (roundStatus !== null) {
       clickedCell.children[0].textContent = activePlayer.icon;
       clickedCell.children[0].style.color = activePlayer.color;
     }
 
-    if (gameStatus) {
+    if (roundStatus) {
       alertModal.classList.add("open");
       gameboard.classList.add("disable");
     }
 
-    if (gameStatus === "win") {
+    if (roundStatus === "win") {
       alertSpan.textContent = `${activePlayer.name} won`;
       alertModal.classList.add("win");
-
+      // recolor winning cells
       Gameboard.getWinningSeq().forEach(
-        cellNum => Array.from(cells)[cellNum].classList.add("winning")
+        cell => Array.from(cells)[cell].classList.add("winning")
       );
-
-    } else if (gameStatus === "tie") {
+    } else if (roundStatus === "tie") {
       alertSpan.textContent = "Game ended in a tie";
       alertModal.classList.add("tie");
     }
 
-    // console.log(Gameboard.getBoard())
   })
 
   alertBtn.addEventListener("click", (e) => {
     cellSpans.forEach(span => span.textContent = "");
-    alertModal.classList.remove("open");
+    alertModal.classList.remove("open", "win", "tie");
     gameboard.classList.remove("disable");
     Array.from(cells).forEach(cell => cell.classList.remove("winning"))
-    // console.log(Gameboard.getBoard())
   })
 }
 
