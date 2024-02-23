@@ -2,7 +2,8 @@
 
 
 const Gameboard = (function() {
-  const board = new Array(9).fill(null);
+  let board = new Array(9).fill(null);
+  let winningSeq = [];
   const winningSeqs = [
                         [0, 3, 6],
                         [1, 4, 7],
@@ -18,18 +19,24 @@ const Gameboard = (function() {
 
   function resetGame() {
     board = new Array(9).fill(null);
-    // players.forEach(player => player.playedCells = [])
   }
 
-  function isGameOver(player) {
+  const getWinningSeq = () => winningSeq;
+
+  function hasPlayerWon(player) {
     for (const seq of winningSeqs) {
       if (seq.every(val => board[val] === player)) {
-          console.log(`${player.name} won`);
+        winningSeq = seq;
+        console.log(`${player.name} won`);
 
-          return true;
-      } 
+        return true;
     }
+  }
+  }
 
+  const getBoard = () => board;
+
+  function isGameTie() {
     if (board.every(val => val != null)) {
       console.log("it's a tie");
 
@@ -44,59 +51,111 @@ const Gameboard = (function() {
     }
 
     board[cell] = player;
-    // player.playedCells.push(cell);
+
+    return true;
   }
 
-  return {board, markCell, resetGame, isGameOver};
+  return {markCell, resetGame, hasPlayerWon, isGameTie, getBoard, getWinningSeq};
 })();
 
 
 const Game = (function() {
-  const player1 = Player("Xavier", "✖");
-  const player2 = Player("Oman", "🞅");
+  const player1 = new Player();
+  const player2 = new Player();
 
   const players = [player1, player2];
   let activePlayer = players[0];
 
   function togglePlayer() {
     activePlayer = players.reverse()[0];
-    // console.log(activePlayer)
   }
+
+  const getActivePlayer = () => activePlayer;
 
   function playRound(cell) {
-    if (isNaN(cell)) return;
+    let gameStatus = "";
 
-    Gameboard.markCell(activePlayer, cell);
-    if (Gameboard.isGameOver(activePlayer)) {
-      Gameboard.resetGame();
-    };
-    
-    togglePlayer();
-    // console.log(Gameboard.board)
+    if (isNaN(cell)) return null;
+    if (!Gameboard.markCell(activePlayer, cell)) return null;
+
+    if (Gameboard.hasPlayerWon(activePlayer)) gameStatus = "win";
+    if (Gameboard.isGameTie()) gameStatus = "tie";
+
+    if (gameStatus) Gameboard.resetGame();
+    else togglePlayer();
+
+    return gameStatus;
   }
 
-  return {playRound};
+  return {playRound, getActivePlayer, player1, player2};
   
 })();
 
 
 function Player(name, icon) {
-  // const playedCells = [];
-
-  return {
-          name, 
-          icon, 
-          // playedCells,
-        }
+  this.name = name;
+  this.icon = icon;
 }
 
 
-// function DisplayControl() {
-//   const gameboard = document.getElementById("gameboard");
-//   gameboard.addEventListener("click", (e) => {
-//   const clickedCell = e.target.closest(".cell");
-//   if (!clickedCell) return;
+function DisplayControl() {
+  const gameboard = document.getElementById("gameboard");
+  const cells = document.querySelectorAll(".cell");
+  const alertModal = document.getElementById("alert");
+  const alertBtn = document.getElementById("reset");
+  const alertSpan = document.querySelector("#alert span");
+  const cellSpans = document.querySelectorAll(".cell span");
+  // console.log(cellSpans)
 
-//   clickedCell.children[0].textContent = this.icon;
-//   })
-// }
+  Game.player1.name = "Xavier";
+  Game.player1.icon = "✖";
+  Game.player1.color = "#fe6666";
+  Game.player2.name = "Oman";
+  Game.player2.icon = "🞅";
+  Game.player2.color = "#62b5fe";
+
+  gameboard.addEventListener("click", (e) => {
+    const clickedCell = e.target.closest(".cell");
+    if (!clickedCell) return;
+
+    let activePlayer = Game.getActivePlayer();
+    
+    const cellNum = Array.from(cells).indexOf(clickedCell);
+    const gameStatus = Game.playRound(cellNum);
+
+    if (gameStatus !== null) {
+      clickedCell.children[0].textContent = activePlayer.icon;
+      clickedCell.children[0].style.color = activePlayer.color;
+    }
+
+    if (gameStatus) {
+      alertModal.classList.add("open");
+      gameboard.classList.add("disable");
+    }
+
+    if (gameStatus === "win") {
+      alertSpan.textContent = `${activePlayer.name} won`;
+      alertModal.classList.add("win");
+
+      Gameboard.getWinningSeq().forEach(
+        cellNum => Array.from(cells)[cellNum].classList.add("winning")
+      );
+
+    } else if (gameStatus === "tie") {
+      alertSpan.textContent = "Game ended in a tie";
+      alertModal.classList.add("tie");
+    }
+
+    // console.log(Gameboard.getBoard())
+  })
+
+  alertBtn.addEventListener("click", (e) => {
+    cellSpans.forEach(span => span.textContent = "");
+    alertModal.classList.remove("open");
+    gameboard.classList.remove("disable");
+    Array.from(cells).forEach(cell => cell.classList.remove("winning"))
+    // console.log(Gameboard.getBoard())
+  })
+}
+
+DisplayControl();
