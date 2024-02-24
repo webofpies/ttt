@@ -34,12 +34,8 @@ const Gameboard = (function() {
     }
   }
 
-  function isGameTie() {
-    if (board.every(val => val != null)) {
-      console.log("it's a tie");
-
-      return true;
-    }
+  function allCellsFilled() {
+    return board.every(val => val != null);
   }
 
   function markCell(player, cell) {
@@ -53,7 +49,7 @@ const Gameboard = (function() {
     return true;
   }
 
-  return {markCell, resetGame, hasPlayerWon, isGameTie, getWinningSeq};
+  return {markCell, resetGame, hasPlayerWon, allCellsFilled, getWinningSeq};
 })();
 
 
@@ -77,7 +73,7 @@ const Game = (function() {
     if (!Gameboard.markCell(activePlayer, cell)) return null;
 
     if (Gameboard.hasPlayerWon(activePlayer)) roundStatus = "win";
-    else if (Gameboard.isGameTie()) roundStatus = "tie";
+    else if (Gameboard.allCellsFilled()) roundStatus = "tie";
 
     if (roundStatus) Gameboard.resetGame();
     else togglePlayer();
