@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+body {
+  font-family: 'Courier New', Courier, monospace;
+}
+
 #gameboard {
   display: grid;
   grid-template-columns: repeat(3, max-content);
@@ -11,6 +15,7 @@
   align-content: center;
   gap: 0.4rem;
   background-color: #4f4f4f;
+  margin-top: 2rem;
 }
 
 #gameboard.disable {
@@ -46,7 +51,7 @@
 
 h1 {
   text-align: center;
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
 }
 
 #alert {
@@ -92,4 +97,57 @@ h1 {
 #alert.win {
   background-color: #69db7c;
   border: 1px solid #40c057;
+}
+
+#players {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.player {
+  display: grid;
+  align-items: end;
+  gap: 0.7rem;
+}
+
+#player1 {
+  grid-template-columns: 80px 25px;
+}
+
+#player2 {
+  grid-template-columns: 25px 80px;
+}
+
+#player2-score {
+  order: -1;
+}
+
+.player-score {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#gamestart {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 1rem;
+}
+
+#start {
+  width: 160px;
+  padding: 0.5rem;
+  border-radius: 15px;
+  border: none;
+}
+
+.player-name {
+  width: 100%;
+  margin-top: 0.3rem;
+}
+
+#player2-name-box {
+  text-align: right;
 }

@@ -10,7 +10,26 @@
 <body>
   <div id="container">
     <h1>TicTacToe</h1>
-    <div id="gameboard">
+    <form id="gamestart">
+      <div id="players">
+        <div id="player1" class="player">
+          <div id="player1-name-box" class="player-name-box">
+            <label for="player1-name">Player 1</label>
+            <input type="text" id="player1-name" class="player-name" required>
+          </div>
+          <div id="player1-score" class="player-score"><span></span></div>
+        </div>
+        <div id="player2" class="player">
+          <div id="player2-name-box" class="player-name-box">
+            <label for="player2-name">Player 2</label>
+            <input type="text" id="player2-name" class="player-name" required>
+          </div>
+          <div id="player2-score" class="player-score"><span></span></div>
+        </div>
+      </div>
+      <button id="start">Start</button>
+    </form>
+    <div id="gameboard" class="disable">
       <div class="cell"><span></span></div>
       <div class="cell"><span></span></div>
       <div class="cell"><span></span></div>
@@ -23,7 +42,7 @@
     </div>
     <div id="alert">
       <span></span>
-      <button id="reset"><span>Play again</span></button>
+      <button id="reset">Play again</button>
     </div>
   </div>
 </body>
