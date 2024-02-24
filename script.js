@@ -99,13 +99,35 @@ function DisplayControl() {
   const alertBtn = document.getElementById("reset");
   const alertSpan = document.querySelector("#alert span");
   const cellSpans = document.querySelectorAll(".cell span");
+  const startBtn = document.getElementById("start");
+  const player1NameField = document.getElementById("player1-name");
+  const player2NameField = document.getElementById("player2-name");
+  const player1NameBox = document.getElementById("player1-name-box");
+  const player2NameBox = document.getElementById("player2-name-box");
 
-  Game.player1.name = "Player_X";
   Game.player1.icon = "✖";
   Game.player1.color = "#fe6666";
-  Game.player2.name = "Player_O";
   Game.player2.icon = "🞅";
   Game.player2.color = "#62b5fe";
+
+  startBtn.addEventListener("click", (e) => {
+    if (!player1NameField.value || !player2NameField.value) {
+      console.log("fill out player names to start the game");
+      return
+    };
+    if (player1NameField.value === player2NameField.value) {
+      console.log("can't use same name for players");
+      return
+    };
+
+    Game.player1.name = player1NameField.value;
+    Game.player2.name = player2NameField.value;
+
+    player1NameBox.classList.add("active");
+    
+    gameboard.classList.remove("disable");
+    gameboard.style.opacity = 1;
+  })
 
   gameboard.addEventListener("click", (e) => {
     const clickedCell = e.target.closest(".cell");
@@ -124,6 +146,9 @@ function DisplayControl() {
     if (roundStatus) {
       alertModal.classList.add("open");
       gameboard.classList.add("disable");
+    } else {
+      player1NameBox.classList.toggle("active");
+      player2NameBox.classList.toggle("active");
     }
 
     if (roundStatus === "win") {
@@ -144,6 +169,8 @@ function DisplayControl() {
     cellSpans.forEach(span => span.textContent = "");
     alertModal.classList.remove("open", "win", "tie");
     gameboard.classList.remove("disable");
+    player1NameBox.classList.remove("active");
+    player2NameBox.classList.remove("active");
     Array.from(cells).forEach(cell => cell.classList.remove("winning"))
   })
 }

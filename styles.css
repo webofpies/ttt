@@ -16,6 +16,9 @@ body {
   gap: 0.4rem;
   background-color: #4f4f4f;
   margin-top: 2rem;
+
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 #gameboard.disable {
@@ -148,6 +151,22 @@ h1 {
   margin-top: 0.3rem;
 }
 
+#player1-name-box {
+  border-bottom: 4px solid transparent;
+  padding-bottom: 3px;
+}
+
 #player2-name-box {
+  border-bottom: 4px solid transparent;
+  padding-bottom: 3px;
+
   text-align: right;
+}
+
+#player1-name-box.active {
+  border-bottom-color: #fe6666;
+}
+
+#player2-name-box.active {
+  border-bottom-color: #62b5fe;
 }
