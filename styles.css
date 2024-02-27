@@ -15,6 +15,7 @@ body {
   align-content: center;
   gap: 0.4rem;
   background-color: #4f4f4f;
+  border: 0.4rem solid #4f4f4f;
   margin-top: 2rem;
 
   opacity: 0;
@@ -55,6 +56,7 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 2.5rem;
+  user-select: none;
 }
 
 #alert {
@@ -67,7 +69,7 @@ h1 {
   left: 50%;
   transform: translate(-50%, -50%);
 
-  padding: 1.2rem 3rem 0.5rem;
+  /* padding: 1.2rem 3rem 0.5rem; */
   border-radius: 5px;
   box-shadow: 0 0 7px 2px #00000073;
   
@@ -80,12 +82,17 @@ h1 {
 }
 
 #reset {
+  display: none;
   padding: 0.3rem 1.4rem;
   width: max-content;
 
   border-radius: 12px;
   border: 1px solid #5b8455;
 }
+
+/* #reset.game-over {
+  display: block;
+} */
 
 #alert.open {
   opacity: 1;
@@ -95,11 +102,28 @@ h1 {
 #alert.tie {
   background-color: #ffa94d;
   border: 1px solid #ff922b;
+  padding: 1.2rem 3rem 1.2rem;
 }
 
 #alert.win {
   background-color: #69db7c;
   border: 1px solid #40c057;
+  padding: 1.2rem 3rem 1.2rem;
+}
+
+/* .win #reset,
+.tie #reset {
+  display: none;
+} */
+
+.gameover #reset {
+  display: block;
+}
+
+#alert.gameover {
+  background-color: #b048ff;
+  border: 1px solid #bd71f6;
+  padding: 1.2rem 3rem 1rem;
 }
 
 #players {
@@ -127,16 +151,24 @@ h1 {
 }
 
 .player-score {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 4px solid transparent;
+  padding-bottom: 3px;
+  user-select: none;
+}
+
+.player-score span {
+  padding: 0.2rem 0.5rem;
+  height: 1.4rem;
 }
 
 #gamestart {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 #start {
@@ -149,6 +181,10 @@ h1 {
 .player-name {
   width: 100%;
   margin-top: 0.3rem;
+  border: none;
+  background-color: #e2e2e2;
+  padding: 0.2rem 0.5rem;
+  height: 1.4rem;
 }
 
 #player1-name-box {
@@ -169,4 +205,21 @@ h1 {
 
 #player2-name-box.active {
   border-bottom-color: #62b5fe;
+}
+
+.player-score .highlight {
+  animation: win-animation 0.4s 2;
+}
+
+.player-name-box label {
+  user-select: none;
+}
+
+@keyframes win-animation {
+  0% {
+    background-color: #fff;
+  }
+  100% {
+    background-color: #ff6868;
+  }
 }
