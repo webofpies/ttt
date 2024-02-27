@@ -90,11 +90,9 @@ h1 {
   border: 1px solid #5b8455;
 }
 
-/* #reset.game-over {
-  display: block;
-} */
-
-#alert.open {
+#alert.tie,
+#alert.win,
+#alert.gameover {
   opacity: 1;
   pointer-events: all;
 }
@@ -111,19 +109,14 @@ h1 {
   padding: 1.2rem 3rem 1.2rem;
 }
 
-/* .win #reset,
-.tie #reset {
-  display: none;
-} */
-
-.gameover #reset {
-  display: block;
-}
-
 #alert.gameover {
   background-color: #b048ff;
   border: 1px solid #bd71f6;
   padding: 1.2rem 3rem 1rem;
+}
+
+.gameover #reset {
+  display: block;
 }
 
 #players {

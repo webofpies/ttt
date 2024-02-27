@@ -203,8 +203,10 @@ const Game = (function () {
           alertClass = "gameover";
         }
       }
-
-      openAlert(alertText, alertClass);
+      // open alert window
+      alertModal.classList.add(alertClass);
+      gameboard.classList.add("disable");
+      alertSpan.textContent = alertText;
 
       if (!Game.isGameWon()) {
         setTimeout(resetGameboardRound, "1000");
@@ -212,33 +214,26 @@ const Game = (function () {
     }
   });
 
-  resetBtn.addEventListener("click", resetGameboardWin);
-
-  function resetGameboardWin() {
+  resetBtn.addEventListener("click", function () {
     resetGameboardRound();
     Game.resetScores();
     player1NameBox.classList.remove("active");
     player2NameBox.classList.remove("active");
     player1ScoreEl.textContent = 0;
     player2ScoreEl.textContent = 0;
-  }
+    gameboard.classList.add("disable");
+    gameboard.style.opacity = 0;
+    startBtn.style.opacity = 1;
+  });
 
   function resetGameboardRound() {
     // close modal
-    alertModal.classList.remove("open", "win", "tie", "gameover");
+    alertModal.classList.remove("win", "tie", "gameover");
     gameboard.classList.remove("disable");
     // clear cells
     cellSpans.forEach((span) => (span.textContent = ""));
     player1ScoreEl.classList.remove("highlight");
     player2ScoreEl.classList.remove("highlight");
     Array.from(cells).forEach((cell) => cell.classList.remove("winning"));
-  }
-
-  function openAlert(text, className) {
-    alertModal.classList.add("open");
-    gameboard.classList.add("disable");
-
-    alertModal.classList.add(className);
-    alertSpan.textContent = text;
   }
 })();
