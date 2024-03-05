@@ -8,7 +8,6 @@ function Player(name, score, icon) {
 
 const Gameboard = (function () {
   let board = new Array(9).fill(null);
-  let winningSeq = [];
   const winningSeqs = [
     [0, 3, 6],
     [1, 4, 7],
@@ -22,18 +21,12 @@ const Gameboard = (function () {
     [2, 4, 6],
   ];
 
-  const getWinningSeq = () => winningSeq;
   const resetBoard = () => (board = new Array(9).fill(null));
 
-  function winningSeqMatched(player) {
-    for (const seq of winningSeqs) {
-      if (seq.every((val) => board[val] === player)) {
-        winningSeq = seq;
-        console.log(`${player.name} won`);
-
-        return true;
-      }
-    }
+  function getWinningSeq() {
+    return winningSeqs.filter((seq) =>
+      seq.every((val) => board[val] !== null && board[val] === board[seq[0]])
+    );
   }
 
   function allCellsFilled() {
@@ -41,10 +34,7 @@ const Gameboard = (function () {
   }
 
   function markCell(player, cell) {
-    if (board[cell]) {
-      console.log("cell is occupied");
-      return;
-    }
+    if (board[cell]) return;
 
     board[cell] = player;
 
@@ -54,16 +44,15 @@ const Gameboard = (function () {
   return {
     resetBoard,
     markCell,
-    winningSeqMatched,
-    allCellsFilled,
     getWinningSeq,
+    allCellsFilled,
   };
 })();
 
 const Game = (function () {
   let gameWon;
   let roundStatus;
-  let winScore = 2;
+  let winScore = 3;
   const player1 = new Player();
   const player2 = new Player();
   const players = [player1, player2];
@@ -93,7 +82,7 @@ const Game = (function () {
     if (isNaN(cell)) return;
     if (!Gameboard.markCell(activePlayer, cell)) return;
 
-    if (Gameboard.winningSeqMatched(activePlayer)) {
+    if (Gameboard.getWinningSeq().length) {
       activePlayer.score++;
       roundStatus = 1;
       if (activePlayer.score === winScore) {
