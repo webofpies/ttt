@@ -1,8 +1,7 @@
 "use strict";
 
-function Player(name, score, icon) {
+function Player(name, score) {
   this.name = name;
-  this.icon = icon;
   this.score = score;
 }
 
