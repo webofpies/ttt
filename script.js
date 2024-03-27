@@ -147,12 +147,31 @@ const Game = (function () {
     Game.player1.name = player1NameField.value;
     Game.player2.name = player2NameField.value;
 
+    player1NameField.setAttribute("disabled", "");
+    player2NameField.setAttribute("disabled", "");
+
     player1NameBox.classList.add("active");
 
     gameboard.classList.remove("disable");
     gameboard.style.opacity = 1;
     startBtn.style.opacity = 0;
   });
+
+  gameboard.addEventListener("mouseover", (e) => {
+    const hoveredCell = e.target.closest(".cell");
+    if (!hoveredCell) return;
+    if (hoveredCell.dataset.occupied === "true") return;
+    
+    hoveredCell.children[0].textContent = Game.getActivePlayer().icon;
+  }, true)
+
+  gameboard.addEventListener("mouseout", (e) => {
+    const hoveredCell = e.target.closest(".cell");
+    if (!hoveredCell) return;
+    if (hoveredCell.dataset.occupied === "true") return;
+  
+    hoveredCell.children[0].textContent = "";
+  })
 
   gameboard.addEventListener("click", (e) => {
     const clickedCell = e.target.closest(".cell");
@@ -164,6 +183,7 @@ const Game = (function () {
 
     clickedCell.children[0].textContent = activePlayer.icon;
     clickedCell.children[0].style.color = activePlayer.color;
+    clickedCell.dataset.occupied = "true";
 
     const roundStatus = Game.getRoundStatus();
     if (roundStatus === 0) {
@@ -210,6 +230,8 @@ const Game = (function () {
     player2NameBox.classList.remove("active");
     player1ScoreEl.textContent = 0;
     player2ScoreEl.textContent = 0;
+    player1NameField.removeAttribute("disabled");
+    player2NameField.removeAttribute("disabled");
     gameboard.classList.add("disable");
     gameboard.style.opacity = 0;
     startBtn.style.opacity = 1;
@@ -220,9 +242,15 @@ const Game = (function () {
     alertModal.classList.remove("win", "tie", "gameover");
     gameboard.classList.remove("disable");
     // clear cells
-    cellSpans.forEach((span) => (span.textContent = ""));
+    cellSpans.forEach((span) => {
+      span.textContent = "";
+      span.style.removeProperty("color");
+    });
     player1ScoreEl.classList.remove("highlight");
     player2ScoreEl.classList.remove("highlight");
-    Array.from(cells).forEach((cell) => cell.classList.remove("winning"));
+    Array.from(cells).forEach((cell) => {
+      cell.classList.remove("winning");
+      cell.dataset.occupied = "";
+    });
   }
 })();

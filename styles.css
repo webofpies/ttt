@@ -45,6 +45,10 @@ body {
   background-color: #a0d2fe;
 }
 
+.cell:not(.occupied) {
+  color: #d7d7d7;
+}
+
 #container {
   position: relative;
   margin: 0 auto;
