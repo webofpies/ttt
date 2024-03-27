@@ -189,37 +189,38 @@ const Game = (function () {
     if (roundStatus === 0) {
       player1NameBox.classList.toggle("active");
       player2NameBox.classList.toggle("active");
+      return
+    }
+
+    let alertText;
+    let alertClass;
+
+    if (roundStatus === -1) {
+      alertText = "Round ended in a tie";
+      alertClass = "tie";
     } else {
-      let alertText;
-      let alertClass;
+      alertText = `${activePlayer.name} won the round`;
+      alertClass = "win";
+      // show score and highlight
+      activePlayer.scoreField.textContent = activePlayer.score;
+      activePlayer.scoreField.classList.add("highlight");
+      // mark winning cells
+      Gameboard.getWinningSeq().forEach((cell) =>
+        Array.from(cells)[cell].classList.add("winning")
+      );
 
-      if (roundStatus === -1) {
-        alertText = "Round ended in a tie";
-        alertClass = "tie";
-      } else {
-        alertText = `${activePlayer.name} won the round`;
-        alertClass = "win";
-        // show score and highlight
-        activePlayer.scoreField.textContent = activePlayer.score;
-        activePlayer.scoreField.classList.add("highlight");
-        // mark winning cells
-        Gameboard.getWinningSeq().forEach((cell) =>
-          Array.from(cells)[cell].classList.add("winning")
-        );
-
-        if (Game.isGameWon()) {
-          alertText = `${activePlayer.name} won the game`;
-          alertClass = "gameover";
-        }
+      if (Game.isGameWon()) {
+        alertText = `${activePlayer.name} won the game`;
+        alertClass = "gameover";
       }
-      // open alert window
-      alertModal.classList.add(alertClass);
-      gameboard.classList.add("disable");
-      alertSpan.textContent = alertText;
+    }
+    // open alert window
+    alertModal.classList.add(alertClass);
+    gameboard.classList.add("disable");
+    alertSpan.textContent = alertText;
 
-      if (!Game.isGameWon()) {
-        setTimeout(resetGameboardRound, "1000");
-      }
+    if (!Game.isGameWon()) {
+      setTimeout(resetGameboardRound, "1000");
     }
   });
 
