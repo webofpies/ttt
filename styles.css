@@ -41,6 +41,22 @@ body {
   user-select: none;
 }
 
+.cell.x::after {
+  content: "✖";
+}
+
+.cell.o::after {
+  content: "🞅";
+}
+
+.cell.x {
+  color: #fe6666;
+}
+
+.cell.o {
+  color: #62b5fe;
+}
+
 .cell.winning {
   background-color: #a0d2fe;
 }

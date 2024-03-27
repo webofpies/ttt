@@ -74,7 +74,7 @@ const Game = (function () {
 
   function playRound(cell) {
     /*
-    roundStatus => 1: win, -1: tie, 0: continue
+    roundStatus => win: [winning sequence], tie: -1, continue: 0
     */
     roundStatus = 0;
     gameWon = false;
@@ -84,7 +84,7 @@ const Game = (function () {
 
     if (Gameboard.getWinningSeq().length) {
       activePlayer.score++;
-      roundStatus = 1;
+      roundStatus = Gameboard.getWinningSeq()[0];
       if (activePlayer.score === winScore) {
         gameWon = true;
       }
@@ -116,7 +116,7 @@ const Game = (function () {
   const alertModal = document.getElementById("alert");
   const resetBtn = document.getElementById("reset");
   const alertSpan = document.querySelector("#alert span");
-  const cellSpans = document.querySelectorAll(".cell span");
+  // const cellSpans = document.querySelectorAll(".cell span");
   const startBtn = document.getElementById("start");
   const player1NameField = document.getElementById("player1-name");
   const player2NameField = document.getElementById("player2-name");
@@ -125,12 +125,13 @@ const Game = (function () {
   const player1ScoreEl = document.querySelector("#player1-score span");
   const player2ScoreEl = document.querySelector("#player2-score span");
 
-  Game.player1.icon = "✖";
-  Game.player1.color = "#fe6666";
+  const cellsArray = Array.from(cells);
+
+  Game.player1.className = "x";
+  Game.player2.className = "o";
+
   Game.player1.scoreField = player1ScoreEl;
   Game.player1.nameField = player1NameField;
-  Game.player2.icon = "🞅";
-  Game.player2.color = "#62b5fe";
   Game.player2.scoreField = player2ScoreEl;
   Game.player2.nameField = player2NameField;
 
@@ -160,17 +161,18 @@ const Game = (function () {
   gameboard.addEventListener("mouseover", (e) => {
     const hoveredCell = e.target.closest(".cell");
     if (!hoveredCell) return;
-    if (hoveredCell.dataset.occupied === "true") return;
+    if (hoveredCell.classList.contains("occupied")) return;
     
-    hoveredCell.children[0].textContent = Game.getActivePlayer().icon;
+    hoveredCell.classList.add(Game.getActivePlayer().className);
+    // hoveredCell.children[0].textContent = Game.getActivePlayer().icon;
   }, true)
 
   gameboard.addEventListener("mouseout", (e) => {
     const hoveredCell = e.target.closest(".cell");
     if (!hoveredCell) return;
-    if (hoveredCell.dataset.occupied === "true") return;
+    if (hoveredCell.classList.contains("occupied")) return;
   
-    hoveredCell.children[0].textContent = "";
+    hoveredCell.classList.remove("x", "o");;
   })
 
   gameboard.addEventListener("click", (e) => {
@@ -178,12 +180,10 @@ const Game = (function () {
     if (!clickedCell) return;
 
     const activePlayer = Game.getActivePlayer();
-    const cellNum = Array.from(cells).indexOf(clickedCell);
+    const cellNum = cellsArray.indexOf(clickedCell);
     if (!Game.playRound(cellNum)) return;
 
-    clickedCell.children[0].textContent = activePlayer.icon;
-    clickedCell.children[0].style.color = activePlayer.color;
-    clickedCell.dataset.occupied = "true";
+    clickedCell.classList.add(activePlayer.className, "occupied");
 
     const roundStatus = Game.getRoundStatus();
     if (roundStatus === 0) {
@@ -205,9 +205,9 @@ const Game = (function () {
       activePlayer.scoreField.textContent = activePlayer.score;
       activePlayer.scoreField.classList.add("highlight");
       // mark winning cells
-      Gameboard.getWinningSeq().forEach((cell) =>
-        Array.from(cells)[cell].classList.add("winning")
-      );
+      roundStatus.forEach((cell) => {
+        cellsArray[cell].classList.add("winning");
+      });
 
       if (Game.isGameWon()) {
         alertText = `${activePlayer.name} won the game`;
@@ -242,16 +242,10 @@ const Game = (function () {
     // close modal
     alertModal.classList.remove("win", "tie", "gameover");
     gameboard.classList.remove("disable");
-    // clear cells
-    cellSpans.forEach((span) => {
-      span.textContent = "";
-      span.style.removeProperty("color");
-    });
     player1ScoreEl.classList.remove("highlight");
     player2ScoreEl.classList.remove("highlight");
-    Array.from(cells).forEach((cell) => {
-      cell.classList.remove("winning");
-      cell.dataset.occupied = "";
+    cellsArray.forEach((cell) => {
+      cell.classList.remove("winning", "x", "o", "occupied");
     });
   }
 })();
