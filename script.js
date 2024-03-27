@@ -112,11 +112,9 @@ const Game = (function () {
 
 (function DisplayControl() {
   const gameboard = document.getElementById("gameboard");
-  const cells = document.querySelectorAll(".cell");
   const alertModal = document.getElementById("alert");
   const resetBtn = document.getElementById("reset");
   const alertSpan = document.querySelector("#alert span");
-  // const cellSpans = document.querySelectorAll(".cell span");
   const startBtn = document.getElementById("start");
   const player1NameField = document.getElementById("player1-name");
   const player2NameField = document.getElementById("player2-name");
@@ -125,7 +123,7 @@ const Game = (function () {
   const player1ScoreEl = document.querySelector("#player1-score span");
   const player2ScoreEl = document.querySelector("#player2-score span");
 
-  const cellsArray = Array.from(cells);
+  const cellsArray = Array.from(document.querySelectorAll(".cell"));
 
   Game.player1.className = "x";
   Game.player2.className = "o";
